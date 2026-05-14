@@ -12,7 +12,17 @@ const photos = {
   contactCamera: asset("photos/contact-camera.png"),
 };
 
+const topVideos = [
+  ["https://youtu.be/N3lNb5sjRcA", photos.shichigosan, "七五三・家族向けの動画"],
+  ["https://youtu.be/HZDisAdoCk8", photos.piano, "ピアノ・発表会系の動画"],
+  ["https://youtu.be/iYOYxS03Hu4", photos.dance, "社交ダンス・パーティ系の動画"],
+  ["https://youtu.be/J32lpCQIbhc", photos.birthday, "誕生日・記念日系の動画"],
+];
+
+const contactFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdz8nwNebOYapZEUH8CuSWb-axnHADNK-AjyWyX0kewRmvqtQ/viewform?usp=publish-editor";
+
 const nav = [
+  ["トップ", "#/"],
   ["制作実績", "#/works"],
   ["料金", "#/pricing"],
   ["制作の流れ", "#/flow"],
@@ -36,12 +46,12 @@ const services = [
 ];
 
 const works = [
-  ["七五三ムービー", photos.shichigosan],
-  ["ピアノ発表会", photos.piano],
-  ["社交ダンスパーティ", photos.dance],
-  ["バースデーフィルム", photos.birthday],
-  ["ミュージックビデオ", photos.camera],
-  ["家族の記録", photos.serviceWide],
+  ["七五三ムービー", photos.shichigosan, "https://youtu.be/N3lNb5sjRcA"],
+  ["ピアノ発表会", photos.piano, "https://youtu.be/3HB91CTAl5w"],
+  ["社交ダンスパーティ", photos.dance, "https://youtu.be/iYOYxS03Hu4"],
+  ["バースデーフィルム", photos.birthday, "https://youtu.be/J32lpCQIbhc"],
+  ["ミュージックビデオ", photos.camera, "https://youtu.be/jG6DpdmZhNk"],
+  ["家族の記録", photos.serviceWide, "https://youtu.be/V9ee3ZoS41Q"],
 ];
 
 const plans = [
@@ -111,7 +121,7 @@ function footer() {
   </footer>`;
 }
 
-const cta = (label = "制作について相談する", secondary = false) => `<a href="#/contact" data-link class="inline-flex h-[64px] min-w-[200px] items-center justify-center gap-4 rounded-[5px] border px-7 text-[16px] font-bold tracking-[.08em] transition duration-300 hover:-translate-y-1 ${secondary ? "border-gold bg-white/70 text-gold hover:bg-gold hover:text-white" : "border-green bg-green text-white shadow-gold hover:bg-[#244b41]"}"><span>${secondary ? "▷" : "✎"}</span>${label}<span>›</span></a>`;
+const cta = (label = "制作について相談する", secondary = false, href = "#/contact") => `<a href="${href}" data-link class="inline-flex h-[64px] min-w-[200px] items-center justify-center gap-4 rounded-[5px] border px-7 text-[16px] font-bold tracking-[.08em] transition duration-300 hover:-translate-y-1 ${secondary ? "border-gold bg-white/70 text-gold hover:bg-gold hover:text-white" : "border-green bg-green text-white shadow-gold hover:bg-[#244b41]"}"><span>${secondary ? "▷" : "✎"}</span>${label}<span>›</span></a>`;
 
 function sectionTitle(title, text, eyebrow = "") {
   return `<div class="mx-auto mb-10 max-w-3xl text-center fade-up">
@@ -132,19 +142,23 @@ function serviceCard([title, text, image, icon]) {
   </article>`;
 }
 
-function videoCard([title, image], index) {
+function videoFrame(url, title) {
+  const embedUrl = youtubeEmbedUrl(url);
+  if (!embedUrl) return "";
+  return `<iframe class="h-full w-full" src="${embedUrl}" title="${title}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+}
+
+function videoCard([title, image, url], index) {
   return `<article class="fade-up youtube-card group overflow-hidden rounded-[5px] border border-gold/25 bg-white shadow-soft transition duration-500 hover:-translate-y-2">
     <div class="youtube-preview relative h-[250px] overflow-hidden bg-ink/5">
-      <img src="${image}" class="h-full w-full object-cover transition duration-700 group-hover:scale-105" alt="">
-      <span class="absolute left-1/2 top-1/2 grid h-14 w-14 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-white/80 bg-black/20 text-white">▶</span>
+      ${url ? youtubeThumbnail(url, title) : `<img src="${image}" class="h-full w-full object-cover transition duration-700 group-hover:scale-105" alt=""><span class="absolute left-1/2 top-1/2 grid h-14 w-14 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-white/80 bg-black/20 text-white">▶</span>`}
     </div>
     <div class="px-6 py-5">
       <div class="flex items-center gap-3">
         <span class="grid h-10 w-10 place-items-center rounded-full bg-paper text-gold shadow-soft">▣</span>
         <h3 class="font-serifjp text-[20px] font-semibold tracking-[.12em]">${title}</h3>
       </div>
-      <label class="mt-4 block text-xs font-bold tracking-[.12em] text-ink/55" for="youtube-${index}">YouTubeリンク</label>
-      <input id="youtube-${index}" class="youtube-input mt-2 h-11 w-full rounded-[4px] border border-gold/25 bg-paper px-3 text-sm outline-none transition focus:border-green" placeholder="https://www.youtube.com/watch?v=..." />
+      <a href="${url}" target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex text-xs font-bold tracking-[.12em] text-gold transition hover:text-green">YouTubeで開く</a>
     </div>
   </article>`;
 }
@@ -156,7 +170,7 @@ function subHero(title, headline, text, image, options = {}) {
     <div class="fade-up ${options.hideImage ? "max-w-4xl" : ""}">
       <p class="mb-5 text-sm font-bold tracking-[.32em] text-gold">${title}</p>
       <h1 class="font-serifjp text-[46px] leading-[1.55] tracking-[.12em] md:text-[56px]">${headline}</h1>
-      <p class="mt-7 text-lg leading-9 text-ink/68">${text}</p>
+      ${text ? `<p class="mt-7 text-lg leading-9 text-ink/68">${text}</p>` : ""}
       <div class="mt-8">${cta("相談してみる")}</div>
     </div>
     ${imageMarkup}
@@ -184,12 +198,14 @@ const pages = {
         <div class="ornament mb-10"><span>✦</span></div>
         <h1 class="font-serifjp text-[46px] font-medium leading-[1.48] tracking-[.12em] text-ink md:text-[58px]"><span class="hero-line">大切な一日を、</span><br><span class="hero-line">映画のように残す。</span></h1>
         <p class="mt-8 max-w-[580px] text-[20px] leading-[2.05] tracking-[.08em] text-ink/78">七五三、ピアノ発表会、社交ダンスパーティ、誕生日会、MV制作まで。記録ではなく、心に残る映像を。</p>
-        <div class="mt-9 flex flex-wrap gap-6">${cta()}${cta("作品を見る", true)}</div>
+        <div class="mt-9 flex flex-wrap gap-6">${cta()}${cta("作品を見る", true, "#/works")}</div>
       </div>
       <div class="fade-up relative">
         <div class="gold-frame grid overflow-hidden bg-white lg:grid-cols-[2fr_.9fr]">
-          <img src="${photos.shichigosan}" class="h-[500px] w-full object-cover" alt="">
-          <div class="grid h-[500px] grid-rows-3 border-l border-gold/70">${[photos.piano, photos.dance, photos.birthday].map((img) => `<div class="relative overflow-hidden border-b border-gold/70 last:border-b-0"><img src="${img}" class="h-full w-full object-cover" alt=""><span class="absolute left-1/2 top-1/2 grid h-14 w-14 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-white bg-black/20 text-white">▶</span></div>`).join("")}</div>
+          <div class="relative block h-[500px] overflow-hidden">
+            <img src="${topVideos[0][1]}" class="h-full w-full object-cover transition duration-700 hover:scale-105" alt="">
+          </div>
+          <div class="grid h-[500px] grid-rows-3 border-l border-gold/70">${topVideos.slice(1).map(([url, img, label]) => `<div class="relative overflow-hidden border-b border-gold/70 last:border-b-0"><img src="${img}" class="h-full w-full object-cover transition duration-700 hover:scale-105" alt=""></div>`).join("")}</div>
         </div>
         <p class="film-script absolute -bottom-9 right-12 text-[46px]">Cinematic Memories</p>
       </div>
@@ -200,7 +216,7 @@ const pages = {
   "/services": () => `${header()}<main>${subHero("サービス", "人生の節目も、舞台の一瞬も、美しく残す。", "七五三、ピアノ発表会、社交ダンスパーティ、誕生日会、MV制作まで。目的に合わせて撮影から編集、納品まで丁寧に伴走します。", photos.serviceWide)}<section class="container-wide grid grid-cols-1 gap-6 pb-20 md:grid-cols-2 lg:grid-cols-3">${services.map(serviceCard).join("")}</section></main>${footer()}`,
 
   "/works": () => `${header()}<main>
-    ${subHero("制作実績", "一つひとつの記憶に、物語の余韻を。", "YouTubeリンクを貼ると、その場で映像を埋め込み表示できます。", photos.worksGrid, { hideImage: true })}
+    ${subHero("制作実績", "一つひとつの記憶に、物語の余韻を。", "", photos.worksGrid, { hideImage: true })}
     <section class="container-wide pb-20">
       <div class="mb-8 flex flex-wrap gap-3">${["すべて", "記念日", "舞台・発表会", "パーティ", "MV"].map((x, i) => `<span class="rounded-full border px-6 py-3 text-sm font-bold tracking-[.12em] ${i ? "border-gold/35 bg-white text-gold" : "border-green bg-green text-white"}">${x}</span>`).join("")}</div>
       <div class="grid grid-cols-1 gap-6 md:grid-cols-3">${works.map(videoCard).join("")}</div>
@@ -231,12 +247,12 @@ const pages = {
         <p class="mt-7 text-lg leading-9 text-ink/68">撮影内容がまだ決まっていなくても大丈夫です。ご希望やご予算に合わせて、最適な形をご提案します。</p>
         <img src="${photos.contactCamera}" class="mt-10 h-[310px] w-full rounded-[6px] object-cover shadow-soft" alt="">
       </div>
-      <form class="fade-up rounded-[6px] border border-gold/20 bg-white p-8 shadow-soft">
-        ${["お名前", "メールアドレス", "ご希望日"].map((label) => `<label class="mb-5 block"><span class="mb-2 block font-bold tracking-[.08em]">${label}</span><input class="h-14 w-full rounded-[4px] border border-gold/25 bg-paper px-4 outline-none focus:border-green"></label>`).join("")}
-        <label class="mb-5 block"><span class="mb-2 block font-bold tracking-[.08em]">撮影プラン</span><select class="h-14 w-full rounded-[4px] border border-gold/25 bg-paper px-4">${contactPlans.map((plan) => `<option>${plan}</option>`).join("")}</select></label>
-        <label class="block"><span class="mb-2 block font-bold tracking-[.08em]">ご相談内容</span><textarea rows="5" class="w-full rounded-[4px] border border-gold/25 bg-paper p-4"></textarea></label>
-        <button type="button" class="mt-7 h-14 w-full rounded-[5px] bg-green font-bold tracking-[.12em] text-white transition hover:-translate-y-1">送信する</button>
-      </form>
+      <div class="fade-up rounded-[6px] border border-gold/20 bg-white p-8 shadow-soft">
+        <p class="text-sm font-bold tracking-[.32em] text-gold">CONTACT FORM</p>
+        <h2 class="mt-4 font-serifjp text-[34px] leading-[1.5] tracking-[.12em] text-ink">お問い合わせは<br>専用フォームから。</h2>
+        <p class="mt-5 leading-8 text-ink/65">ご相談内容やご希望日などは、Googleフォームでまとめて入力できます。</p>
+        <a href="${contactFormUrl}" target="_blank" rel="noopener noreferrer" class="mt-8 inline-flex h-14 w-full items-center justify-center rounded-[5px] bg-green font-bold tracking-[.12em] text-white transition hover:-translate-y-1">問い合わせフォームを表示</a>
+      </div>
     </section>
   </main>${footer()}`,
 
@@ -262,10 +278,31 @@ function youtubeEmbedUrl(value) {
   return match ? `https://www.youtube.com/embed/${match[1]}` : "";
 }
 
+function youtubeId(value) {
+  const embedUrl = youtubeEmbedUrl(value);
+  const match = embedUrl.match(/embed\/([^?&]+)/);
+  return match ? match[1] : "";
+}
+
+function youtubeThumbnailUrl(value) {
+  const id = youtubeId(value);
+  return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "";
+}
+
+function youtubeThumbnail(url, title) {
+  const thumbnail = youtubeThumbnailUrl(url);
+  if (!thumbnail) return "";
+  return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="relative block h-full w-full overflow-hidden bg-ink/5" aria-label="${title}をYouTubeで開く">
+    <img src="${thumbnail}" class="h-full w-full object-cover transition duration-700 hover:scale-105" alt="${title}">
+    <span class="absolute left-1/2 top-1/2 grid h-14 w-14 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-white/80 bg-black/30 text-white">▶</span>
+  </a>`;
+}
+
 function bindYoutubeInputs() {
   document.querySelectorAll(".youtube-card").forEach((card) => {
     const input = card.querySelector(".youtube-input");
     const preview = card.querySelector(".youtube-preview");
+    if (!input || !preview) return;
     input.addEventListener("input", () => {
       const embedUrl = youtubeEmbedUrl(input.value);
       if (!embedUrl) return;
