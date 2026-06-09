@@ -3,11 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     <title>NIKKO MOVIE TEAM</title>
-    <script defer src="./assets/app.js"></script>
-    <link rel="stylesheet" href="./assets/style.css">
+    <script defer src="./assets/app.js?v=20260604"></script>
+    <link rel="stylesheet" href="./assets/style.css?v=20260604">
   </head>
   <body>
+    <!--
+      制作実績の題名とYouTube URLはここで編集できます。
+      data-imageは shichigosan / piano / dance / birthday / camera / serviceWide から選べます。
+    -->
+    <template id="works-data">
+      <div data-title="お宮参り" data-youtube-url="https://youtu.be/XHZKqpC8luQ" data-image="shichigosan"></div>
+      <div data-title="七五三ムービー" data-youtube-url="https://youtu.be/3FO_iTZd8As" data-image="piano"></div>
+      <div data-title="社交ダンスパーティ" data-youtube-url="https://youtu.be/2Ps3peq7H64" data-image="dance"></div>
+      <div data-title="ピアノ発表会" data-youtube-url="https://youtu.be/eIcpKBXOX_g" data-image="birthday"></div>
+      <div data-title="撮影・編集説明動画" data-youtube-url="https://youtu.be/soK-l56EcOM" data-image="camera"></div>
+      <div data-title="ＶＨＳビデオの編集" data-youtube-url="https://youtu.be/nKLG4hreyDI" data-image="serviceWide"></div>
+      <div data-title="AIビデオ" data-youtube-url="https://youtu.be/t67epUk8KDE" data-image="camera"></div>
+      <div data-title="社交ダンスパーティ（編集のみ）" data-youtube-url="" data-image="dance"></div>
+      <div data-title="広告動画" data-youtube-url="https://youtu.be/aRpsaR1Qp8U" data-image="serviceWide"></div>
+    </template>
     <div id="root"></div>
   </body>
 </html>
