@@ -23,7 +23,6 @@ const contactFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdz8nwNebOYapZE
 
 const nav = [
   ["トップ", "#/"],
-  ["制作実績", "#/works"],
   ["料金", "#/pricing"],
   ["制作の流れ", "#/flow"],
   ["お問い合わせ", "#/contact"],
@@ -31,7 +30,7 @@ const nav = [
 
 const footerLinks = [
   ["トップ", "#/"],
-  ...nav,
+  ["料金", "#/pricing"],
   ["制作の流れ", "#/flow"],
   ["私たちについて", "#/about"],
   ["FAQ", "#/faq"],
@@ -45,34 +44,42 @@ const services = [
   ["MV制作", "曲の世界観を、撮影設計から編集まで一緒に形にします。", photos.camera, "▷"],
 ];
 
-const works = [
-  ["七五三ムービー", photos.shichigosan, "https://youtu.be/N3lNb5sjRcA"],
-  ["ピアノ発表会", photos.piano, "https://youtu.be/3HB91CTAl5w"],
-  ["社交ダンスパーティ", photos.dance, "https://youtu.be/iYOYxS03Hu4"],
-  ["バースデーフィルム", photos.birthday, "https://youtu.be/J32lpCQIbhc"],
-  ["ミュージックビデオ", photos.camera, "https://youtu.be/jG6DpdmZhNk"],
-  ["家族の記録", photos.serviceWide, "https://youtu.be/V9ee3ZoS41Q"],
+const defaultWorks = [
+  { title: "お宮参り", image: photos.shichigosan, youtubeUrl: "https://youtu.be/XHZKqpC8luQ" },
+  { title: "七五三ムービー", image: photos.piano, youtubeUrl: "https://youtu.be/3FO_iTZd8As" },
+  { title: "社交ダンスパーティ", image: photos.dance, youtubeUrl: "https://youtu.be/2Ps3peq7H64" },
+  { title: "ピアノ発表会", image: photos.birthday, youtubeUrl: "https://youtu.be/eIcpKBXOX_g" },
+  { title: "撮影・編集説明動画", image: photos.camera, youtubeUrl: "https://youtu.be/soK-l56EcOM" },
+  { title: "ＶＨＳビデオの編集", image: photos.serviceWide, youtubeUrl: "https://youtu.be/nKLG4hreyDI" },
+  { title: "AIビデオ", image: photos.camera, youtubeUrl: "https://youtu.be/t67epUk8KDE" },
+  { title: "社交ダンスパーティ（編集のみ）", image: photos.dance, youtubeUrl: "" },
+  { title: "広告動画", image: photos.serviceWide, youtubeUrl: "https://youtu.be/aRpsaR1Qp8U" },
 ];
 
+function worksData() {
+  const template = document.getElementById("works-data");
+  if (!template) return defaultWorks;
+  const items = [...template.content.querySelectorAll("[data-title][data-youtube-url]")].map((item) => ({
+    title: item.dataset.title,
+    youtubeUrl: item.dataset.youtubeUrl,
+    image: photos[item.dataset.image] || photos.camera,
+  }));
+  return items.length ? items : defaultWorks;
+}
+
 const plans = [
-  [
-    "おまかせお気軽プラン",
-    "¥30,000〜",
-    "短時間の記録やダイジェスト向け。撮影から編集まで気軽におまかせできます。",
-    ["撮影 1〜2時間程度", "編集 1本", "データ納品", "納品方法: DVD、ブルーレイ、データなど"],
-    true,
-  ],
   [
     "編集だけおまかせプラン",
     "¥15,000〜",
     "自分のスマホやカメラで撮影を、プロの編集で宝物に。",
     ["編集 1本", "BGM調整", "テロップ相談", "納品方法: DVD、ブルーレイ、データなど"],
+    true,
   ],
   [
-    "お試しショートムービー編集プラン",
-    "¥10,000〜",
-    "気楽にお試し利用したい方におすすめ。",
-    ["ショート動画編集", "SNS向けにも対応", "短納期相談可", "納品方法: DVD、ブルーレイ、データなど"],
+    "おまかせお気軽プラン",
+    "¥30,000〜",
+    "短時間の記録やダイジェスト向け。撮影から編集まで気軽におまかせできます。",
+    ["撮影 1〜2時間程度", "編集 1本", "データ納品", "納品方法: DVD、ブルーレイ、データなど"],
   ],
   [
     "ミュージック<br>ビデオプラン",
@@ -91,17 +98,16 @@ const faqs = [
 ];
 
 const contactPlans = [
-  "おまかせお気軽プラン",
   "編集だけおまかせプラン",
-  "お試しショートムービー編集プラン",
+  "おまかせお気軽プラン",
   "ミュージックビデオプラン",
   "その他",
 ];
 
 function header() {
-  return `<header class="container-wide flex h-[104px] items-center justify-between">
-    <a href="#/" data-link class="font-display text-[32px] tracking-[.12em] text-ink">NIKKO MOVIE TEAM</a>
-    <nav class="hidden items-center gap-16 text-[15px] font-semibold tracking-[.18em] md:flex">
+  return `<header class="container-wide flex min-h-[104px] flex-col items-start justify-center gap-5 py-5 md:flex-row md:items-center md:justify-between md:py-0">
+    <a href="#/" data-link class="font-display text-[24px] tracking-[.10em] text-ink md:text-[32px] md:tracking-[.12em]">NIKKO MOVIE TEAM</a>
+    <nav class="flex flex-wrap items-center gap-x-6 gap-y-3 text-[13px] font-semibold tracking-[.12em] md:gap-16 md:text-[15px] md:tracking-[.18em]">
       ${nav.map(([label, href]) => `<a href="${href}" data-link class="transition hover:text-gold">${label}</a>`).join("")}
     </nav>
   </header>`;
@@ -112,7 +118,7 @@ function footer() {
     <div class="container-wide flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
       <div>
         <p class="font-display text-2xl tracking-[.12em]">NIKKO MOVIE TEAM</p>
-        <p class="mt-3 text-sm leading-7 text-ink/60">大切な一日を、映画のように残す。</p>
+        <p class="mt-3 text-sm leading-7 text-ink/60">日々の思い出を特別な宝物へ</p>
       </div>
       <div class="flex flex-wrap gap-5 text-sm text-ink/65">
         ${footerLinks.map(([label, href]) => `<a href="${href}" data-link class="hover:text-gold">${label}</a>`).join("")}
@@ -121,56 +127,50 @@ function footer() {
   </footer>`;
 }
 
-const cta = (label = "制作について相談する", secondary = false, href = "#/contact") => `<a href="${href}" data-link class="inline-flex h-[64px] min-w-[200px] items-center justify-center gap-4 rounded-[5px] border px-7 text-[16px] font-bold tracking-[.08em] transition duration-300 hover:-translate-y-1 ${secondary ? "border-gold bg-white/70 text-gold hover:bg-gold hover:text-white" : "border-green bg-green text-white shadow-gold hover:bg-[#244b41]"}"><span>${secondary ? "▷" : "✎"}</span>${label}<span>›</span></a>`;
+const cta = (label = "制作について相談する", secondary = false, href = "#/contact") => `<a href="${href}" data-link class="cta-button inline-flex h-[58px] min-w-[200px] items-center justify-center gap-4 rounded-[5px] border px-6 text-[15px] font-bold tracking-[.08em] transition duration-300 hover:-translate-y-1 md:h-[64px] md:px-7 md:text-[16px] ${secondary ? "border-gold bg-white/70 text-gold hover:bg-gold hover:text-white" : "border-green bg-green text-white shadow-gold hover:bg-[#244b41]"}"><span>${secondary ? "▷" : "✎"}</span>${label}<span>›</span></a>`;
 
 function sectionTitle(title, text, eyebrow = "") {
   return `<div class="mx-auto mb-10 max-w-3xl text-center fade-up">
     <div class="ornament justify-center"><span>▣</span></div>
     ${eyebrow ? `<p class="mt-4 text-xs font-bold tracking-[.32em] text-gold">${eyebrow}</p>` : ""}
-    <h2 class="mt-3 font-serifjp text-[38px] font-semibold tracking-[.16em] text-ink md:text-[44px]">${title}</h2>
+    <h2 class="mt-3 font-serifjp text-[30px] font-semibold leading-[1.55] tracking-[.10em] text-ink md:text-[44px] md:tracking-[.16em]">${title}</h2>
     ${text ? `<p class="mt-4 text-[16px] leading-8 tracking-[.08em] text-ink/70">${text}</p>` : ""}
   </div>`;
 }
 
 function serviceCard([title, text, image, icon]) {
   return `<article class="fade-up overflow-hidden rounded-[6px] border border-gold/20 bg-white shadow-soft transition duration-500 hover:-translate-y-2">
-    <div class="h-[160px] overflow-hidden"><img src="${image}" class="h-full w-full object-cover transition duration-700 hover:scale-105" alt=""></div>
+    <div class="h-[150px] overflow-hidden md:h-[160px]"><img src="${image}" class="h-full w-full object-cover transition duration-700 hover:scale-105" alt=""></div>
     <div class="flex gap-4 px-6 py-6">
       <span class="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-white text-2xl text-gold shadow-soft">${icon}</span>
-      <div><h3 class="font-serifjp text-[22px] font-semibold tracking-[.12em]">${title}</h3><p class="mt-2 text-sm leading-7 text-ink/65">${text}</p></div>
+      <div><h3 class="font-serifjp text-[20px] font-semibold tracking-[.10em] md:text-[22px] md:tracking-[.12em]">${title}</h3><p class="mt-2 text-sm leading-7 text-ink/65">${text}</p></div>
     </div>
   </article>`;
 }
 
-function videoFrame(url, title) {
-  const embedUrl = youtubeEmbedUrl(url);
-  if (!embedUrl) return "";
-  return `<iframe class="h-full w-full" src="${embedUrl}" title="${title}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
-}
-
-function videoCard([title, image, url], index) {
+function videoCard({ title, image, youtubeUrl }, index) {
+  const player = youtubePlayer(youtubeUrl || "", title);
   return `<article class="fade-up youtube-card group overflow-hidden rounded-[5px] border border-gold/25 bg-white shadow-soft transition duration-500 hover:-translate-y-2">
-    <div class="youtube-preview relative h-[250px] overflow-hidden bg-ink/5">
-      ${url ? youtubeThumbnail(url, title) : `<img src="${image}" class="h-full w-full object-cover transition duration-700 group-hover:scale-105" alt=""><span class="absolute left-1/2 top-1/2 grid h-14 w-14 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-white/80 bg-black/20 text-white">▶</span>`}
+    <div class="relative aspect-video w-full overflow-hidden bg-ink/5">
+      ${player || `<img src="${image}" class="h-full w-full object-cover transition duration-700 group-hover:scale-105" alt="">`}
     </div>
     <div class="px-6 py-5">
       <div class="flex items-center gap-3">
         <span class="grid h-10 w-10 place-items-center rounded-full bg-paper text-gold shadow-soft">▣</span>
-        <h3 class="font-serifjp text-[20px] font-semibold tracking-[.12em]">${title}</h3>
+        <h3 class="font-serifjp text-[18px] font-semibold tracking-[.10em] md:text-[20px] md:tracking-[.12em]">${title}</h3>
       </div>
-      <a href="${url}" target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex text-xs font-bold tracking-[.12em] text-gold transition hover:text-green">YouTubeで開く</a>
     </div>
   </article>`;
 }
 
 function subHero(title, headline, text, image, options = {}) {
-  const imageMarkup = options.hideImage ? "" : `<img src="${image}" class="gold-frame fade-up h-[430px] w-full object-cover" alt="">`;
+  const imageMarkup = options.hideImage ? "" : `<img src="${image}" class="gold-frame fade-up h-[280px] w-full object-cover md:h-[430px]" alt="">`;
   const gridClass = options.hideImage ? "container-wide pb-16 pt-8" : "container-wide grid items-center gap-12 pb-16 pt-8 lg:grid-cols-[.8fr_1fr]";
   return `<section class="${gridClass}">
     <div class="fade-up ${options.hideImage ? "max-w-4xl" : ""}">
       <p class="mb-5 text-sm font-bold tracking-[.32em] text-gold">${title}</p>
-      <h1 class="font-serifjp text-[46px] leading-[1.55] tracking-[.12em] md:text-[56px]">${headline}</h1>
-      ${text ? `<p class="mt-7 text-lg leading-9 text-ink/68">${text}</p>` : ""}
+      <h1 class="font-serifjp text-[34px] leading-[1.55] tracking-[.08em] md:text-[56px] md:tracking-[.12em]">${headline}</h1>
+      ${text ? `<p class="mt-6 text-base leading-8 text-ink/68 md:mt-7 md:text-lg md:leading-9">${text}</p>` : ""}
       <div class="mt-8">${cta("相談してみる")}</div>
     </div>
     ${imageMarkup}
@@ -182,10 +182,10 @@ function plainHero(title, headline, text) {
 }
 
 function pricingCard(plan) {
-  return `<article class="fade-up relative rounded-[6px] border bg-white p-8 shadow-soft transition duration-500 hover:-translate-y-2 ${plan[4] ? "border-green ring-1 ring-green/20" : "border-gold/20"}">
-    ${plan[4] ? `<span class="absolute right-6 top-6 rounded-full bg-green px-4 py-2 text-xs font-bold tracking-[.16em] text-white">おすすめ</span>` : ""}
-    <h3 class="font-serifjp text-[25px] font-semibold tracking-[.12em]">${plan[0]}</h3>
-    <p class="mt-4 font-display text-[44px] text-gold">${plan[1]}</p>
+  return `<article class="fade-up relative rounded-[6px] border bg-white p-6 shadow-soft transition duration-500 hover:-translate-y-2 md:p-8 ${plan[4] ? "border-green ring-1 ring-green/20" : "border-gold/20"}">
+    ${plan[4] ? `<span class="absolute right-6 top-10 rounded-full bg-green px-4 py-2 text-xs font-bold tracking-[.16em] text-white md:top-12">おすすめ</span>` : ""}
+    <h3 class="font-serifjp text-[22px] font-semibold leading-[1.45] tracking-[.08em] md:text-[25px] md:tracking-[.12em] ${plan[4] ? "pr-0 pt-10 sm:pr-28 sm:pt-0" : ""}">${plan[0]}</h3>
+    <p class="mt-4 font-display text-[34px] text-gold md:text-[44px]">${plan[1]}</p>
     <p class="mt-3 min-h-20 text-sm leading-7 text-ink/65">${plan[2]}</p>
     <ul class="mt-8 space-y-4">${plan[3].map((feature) => `<li class="flex items-start gap-3 text-[15px] leading-7"><span class="mt-3 h-1.5 w-1.5 shrink-0 rounded-full bg-gold"></span>${feature}</li>`).join("")}</ul>
   </article>`;
@@ -193,39 +193,36 @@ function pricingCard(plan) {
 
 const pages = {
   "/": () => `${header()}<main>
-    <section class="container-wide grid min-h-[565px] grid-cols-1 items-center gap-12 pb-12 pt-6 lg:grid-cols-[.82fr_1.08fr]">
+    <section class="container-wide grid min-h-[565px] grid-cols-1 items-center gap-10 pb-12 pt-4 md:gap-12 md:pt-6 lg:grid-cols-[.82fr_1.08fr]">
       <div class="fade-up pt-8">
         <div class="ornament mb-10"><span>✦</span></div>
-        <h1 class="font-serifjp text-[46px] font-medium leading-[1.48] tracking-[.12em] text-ink md:text-[58px]"><span class="hero-line">大切な一日を、</span><br><span class="hero-line">映画のように残す。</span></h1>
-        <p class="mt-8 max-w-[580px] text-[20px] leading-[2.05] tracking-[.08em] text-ink/78">七五三、ピアノ発表会、社交ダンスパーティ、誕生日会、MV制作まで。記録ではなく、心に残る映像を。</p>
-        <div class="mt-9 flex flex-wrap gap-6">${cta()}${cta("作品を見る", true, "#/works")}</div>
+        <h1 class="font-serifjp text-[34px] font-medium leading-[1.5] tracking-[.08em] text-ink md:text-[58px] md:tracking-[.12em]"><span class="hero-line">日々の思い出を</span><br><span class="hero-line">特別な宝物へ</span></h1>
+        <p class="mt-7 max-w-[580px] text-[16px] leading-[1.9] tracking-[.06em] text-ink/78 md:mt-8 md:text-[20px] md:leading-[2.05] md:tracking-[.08em]">七五三、ピアノ発表会、社交ダンスパーティ、誕生日会、MV制作まで。記録ではなく、心に残る映像を。</p>
+        <div class="mt-9 flex flex-wrap gap-6">${cta()}<a href="#works-section" class="cta-button inline-flex h-[58px] min-w-[200px] items-center justify-center gap-4 rounded-[5px] border border-gold bg-white/70 px-6 text-[15px] font-bold tracking-[.08em] text-gold transition duration-300 hover:-translate-y-1 hover:bg-gold hover:text-white md:h-[64px] md:px-7 md:text-[16px]"><span>▷</span>作品を見る<span>›</span></a></div>
       </div>
       <div class="fade-up relative">
         <div class="gold-frame grid overflow-hidden bg-white lg:grid-cols-[2fr_.9fr]">
-          <div class="relative block h-[500px] overflow-hidden">
+          <div class="relative block h-[320px] overflow-hidden md:h-[500px]">
             <img src="${topVideos[0][1]}" class="h-full w-full object-cover transition duration-700 hover:scale-105" alt="">
           </div>
-          <div class="grid h-[500px] grid-rows-3 border-l border-gold/70">${topVideos.slice(1).map(([url, img, label]) => `<div class="relative overflow-hidden border-b border-gold/70 last:border-b-0"><img src="${img}" class="h-full w-full object-cover transition duration-700 hover:scale-105" alt=""></div>`).join("")}</div>
+          <div class="hidden h-[500px] grid-rows-3 border-l border-gold/70 md:grid">${topVideos.slice(1).map(([url, img, label]) => `<div class="relative overflow-hidden border-b border-gold/70 last:border-b-0"><img src="${img}" class="h-full w-full object-cover transition duration-700 hover:scale-105" alt=""></div>`).join("")}</div>
         </div>
-        <p class="film-script absolute -bottom-9 right-12 text-[46px]">Cinematic Memories</p>
+        <p class="film-script absolute -bottom-7 right-5 text-[28px] md:-bottom-9 md:right-12 md:text-[46px]">Cinematic Memories</p>
       </div>
     </section>
-    <section class="bg-sand/45 pb-14 pt-8"><div class="container-wide">${sectionTitle("サービス", "人生の大切な瞬間を、映画のような映像で残します。")}<div class="grid grid-cols-1 gap-4 md:grid-cols-5">${services.map(serviceCard).join("")}</div></div></section>
+    <section id="works-section" class="bg-sand/45 pb-14 pt-8">
+      <div class="container-wide">
+        ${sectionTitle("制作実績", "ページ内でそのまま再生できる映像サンプルです。")}
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-3">${worksData().map(videoCard).join("")}</div>
+      </div>
+    </section>
   </main>${footer()}`,
 
   "/services": () => `${header()}<main>${subHero("サービス", "人生の節目も、舞台の一瞬も、美しく残す。", "七五三、ピアノ発表会、社交ダンスパーティ、誕生日会、MV制作まで。目的に合わせて撮影から編集、納品まで丁寧に伴走します。", photos.serviceWide)}<section class="container-wide grid grid-cols-1 gap-6 pb-20 md:grid-cols-2 lg:grid-cols-3">${services.map(serviceCard).join("")}</section></main>${footer()}`,
 
-  "/works": () => `${header()}<main>
-    ${subHero("制作実績", "一つひとつの記憶に、物語の余韻を。", "", photos.worksGrid, { hideImage: true })}
-    <section class="container-wide pb-20">
-      <div class="mb-8 flex flex-wrap gap-3">${["すべて", "記念日", "舞台・発表会", "パーティ", "MV"].map((x, i) => `<span class="rounded-full border px-6 py-3 text-sm font-bold tracking-[.12em] ${i ? "border-gold/35 bg-white text-gold" : "border-green bg-green text-white"}">${x}</span>`).join("")}</div>
-      <div class="grid grid-cols-1 gap-6 md:grid-cols-3">${works.map(videoCard).join("")}</div>
-    </section>
-  </main>${footer()}`,
-
   "/pricing": () => `${header()}<main>
     ${plainHero("料金プラン", "残したい時間に合わせて、<br>無理なく選べるプラン。", "撮影内容や会場規模に合わせて、最適な構成をご提案します。まずはお気軽にご相談ください。")}
-    <section class="container-wide grid grid-cols-1 gap-6 pb-10 md:grid-cols-2 xl:grid-cols-4">${plans.map(pricingCard).join("")}</section>
+    <section class="container-wide grid grid-cols-1 gap-6 pb-10 sm:grid-cols-2 lg:grid-cols-3">${plans.map(pricingCard).join("")}</section>
     <section class="container-wide pb-20">
       <div class="rounded-[6px] border border-gold/25 bg-white/85 p-7 leading-8 text-ink/70 shadow-soft">
         <p class="font-bold tracking-[.12em] text-ink">注意事項</p>
@@ -243,13 +240,13 @@ const pages = {
     <section class="container-wide grid gap-12 pb-20 pt-10 lg:grid-cols-[.8fr_1fr]">
       <div class="fade-up">
         <p class="mb-5 text-sm font-bold tracking-[.32em] text-gold">お問い合わせ</p>
-        <h1 class="font-serifjp text-[50px] leading-[1.45] tracking-[.12em]">大切な一日のこと、<br>まずは聞かせてください。</h1>
-        <p class="mt-7 text-lg leading-9 text-ink/68">撮影内容がまだ決まっていなくても大丈夫です。ご希望やご予算に合わせて、最適な形をご提案します。</p>
-        <img src="${photos.contactCamera}" class="mt-10 h-[310px] w-full rounded-[6px] object-cover shadow-soft" alt="">
+        <h1 class="font-serifjp text-[36px] leading-[1.45] tracking-[.08em] md:text-[50px] md:tracking-[.12em]">大切な一日のこと、<br>まずは聞かせてください。</h1>
+        <p class="mt-6 text-base leading-8 text-ink/68 md:mt-7 md:text-lg md:leading-9">撮影内容がまだ決まっていなくても大丈夫です。ご希望やご予算に合わせて、最適な形をご提案します。</p>
+        <img src="${photos.contactCamera}" class="mt-8 h-[240px] w-full rounded-[6px] object-cover shadow-soft md:mt-10 md:h-[310px]" alt="">
       </div>
       <div class="fade-up rounded-[6px] border border-gold/20 bg-white p-8 shadow-soft">
         <p class="text-sm font-bold tracking-[.32em] text-gold">CONTACT FORM</p>
-        <h2 class="mt-4 font-serifjp text-[34px] leading-[1.5] tracking-[.12em] text-ink">お問い合わせは<br>専用フォームから。</h2>
+        <h2 class="mt-4 font-serifjp text-[28px] leading-[1.5] tracking-[.10em] text-ink md:text-[34px] md:tracking-[.12em]">お問い合わせは<br>専用フォームから。</h2>
         <p class="mt-5 leading-8 text-ink/65">ご相談内容やご希望日などは、Googleフォームでまとめて入力できます。</p>
         <a href="${contactFormUrl}" target="_blank" rel="noopener noreferrer" class="mt-8 inline-flex h-14 w-full items-center justify-center rounded-[5px] bg-green font-bold tracking-[.12em] text-white transition hover:-translate-y-1">問い合わせフォームを表示</a>
       </div>
@@ -275,7 +272,7 @@ function youtubeEmbedUrl(value) {
     /youtube\.com\/shorts\/([^?&]+)/,
   ];
   const match = patterns.map((pattern) => trimmed.match(pattern)).find(Boolean);
-  return match ? `https://www.youtube.com/embed/${match[1]}` : "";
+  return match ? `https://www.youtube-nocookie.com/embed/${match[1]}` : "";
 }
 
 function youtubeId(value) {
@@ -284,31 +281,10 @@ function youtubeId(value) {
   return match ? match[1] : "";
 }
 
-function youtubeThumbnailUrl(value) {
-  const id = youtubeId(value);
-  return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "";
-}
-
-function youtubeThumbnail(url, title) {
-  const thumbnail = youtubeThumbnailUrl(url);
-  if (!thumbnail) return "";
-  return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="relative block h-full w-full overflow-hidden bg-ink/5" aria-label="${title}をYouTubeで開く">
-    <img src="${thumbnail}" class="h-full w-full object-cover transition duration-700 hover:scale-105" alt="${title}">
-    <span class="absolute left-1/2 top-1/2 grid h-14 w-14 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-white/80 bg-black/30 text-white">▶</span>
-  </a>`;
-}
-
-function bindYoutubeInputs() {
-  document.querySelectorAll(".youtube-card").forEach((card) => {
-    const input = card.querySelector(".youtube-input");
-    const preview = card.querySelector(".youtube-preview");
-    if (!input || !preview) return;
-    input.addEventListener("input", () => {
-      const embedUrl = youtubeEmbedUrl(input.value);
-      if (!embedUrl) return;
-      preview.innerHTML = `<iframe class="h-full w-full" src="${embedUrl}" title="YouTube video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
-    });
-  });
+function youtubePlayer(url, title) {
+  const embedUrl = youtubeEmbedUrl(url);
+  if (!embedUrl) return "";
+  return `<iframe class="absolute inset-0 h-full w-full border-0" src="${embedUrl}?rel=0&modestbranding=1&playsinline=1" title="${title}" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
 }
 
 function currentPath() {
@@ -325,7 +301,6 @@ function render(path = currentPath()) {
     scrollTo({ top: 0, behavior: "smooth" });
   }));
   document.querySelectorAll(".faq button").forEach((button) => button.addEventListener("click", () => button.parentElement.querySelector("p").classList.toggle("hidden")));
-  bindYoutubeInputs();
 }
 
 addEventListener("hashchange", () => render(currentPath()));
