@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://y19900827-lang.github.io/nikko-video-site/sitemap.xml
